@@ -82,3 +82,19 @@ In-game checks remain necessary:
 Successful compilation and automated checks do not establish native rendering
 or multiplayer behavior. The screen-space renderer still requires runtime validation.
 Game assets are referenced at runtime and are not distributed.
+
+## 0.1.12
+
+Marker labels use a 10-point font instead of 12. The clock and preview retain 12 points.
+Font size is set on every pooled label draw so reused labels cannot inherit the wrong size.
+
+## 0.1.13 daily marker
+
+The local player code and TimeManager.ElapsedDays deterministically choose a duck on
+one percent of in-game days. Reloading that day preserves the outcome; the next day
+uses a new score. The generated glyph faces upward at zero heading and rotates with
+the existing camera-heading transform. Its forward beak supplies the direction cue.
+It uses the existing bounded texture pool and cleanup, and never changes map projection
+or world movement. Labels retain the smaller font from 0.1.12. Pure checks cover stable
+selection and probability over 10,000 days; visual clarity and native day rollover require
+game testing. Marker choice is personal, not shared across all players.

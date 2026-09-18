@@ -60,7 +60,7 @@ internal sealed class MapOverlay
         place(image.rectTransform, rect, angle);
     }
 
-    public void label(Rect rect, string value, Color color, bool centered = false)
+    public void label(Rect rect, string value, Color color, bool centered = false, int font_size = 12)
     {
         if (font == null) return;
         if (label_count >= labels.Length) throw new InvalidOperationException("Minimap label pool exhausted.");
@@ -72,7 +72,6 @@ internal sealed class MapOverlay
             text = element.AddComponent<Text>();
             text.raycastTarget = false;
             text.supportRichText = false;
-            text.fontSize = 12;
             text.horizontalOverflow = HorizontalWrapMode.Overflow;
             text.verticalOverflow = VerticalWrapMode.Overflow;
             labels[label_count] = text;
@@ -80,6 +79,7 @@ internal sealed class MapOverlay
         label_count++;
         text.enabled = true;
         text.font = font;
+        text.fontSize = font_size;
         text.text = value;
         text.color = color;
         text.alignment = centered ? TextAnchor.MiddleCenter : TextAnchor.MiddleLeft;

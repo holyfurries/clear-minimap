@@ -12,7 +12,7 @@ internal sealed class MinimapView
 {
     private readonly SpriteTextures sprite_textures = new();
     private readonly MapMotion motion = new();
-    private readonly Texture2D?[] icons = new Texture2D?[5];
+    private readonly Texture2D?[] icons = new Texture2D?[6];
     private readonly MapOverlay overlay = new();
     private readonly Rect[] labels = new Rect[12];
     private readonly Vector2[] placed_markers = new Vector2[96];
@@ -123,7 +123,7 @@ internal sealed class MinimapView
             if (overlap) continue;
             labels[label_count++] = label;
             overlay.box(label, new Color(0.03f, 0.045f, 0.06f, 0.8f));
-            overlay.label(label, text, color);
+            overlay.label(label, text, color, font_size: 10);
         }
         for (int i = 0; i < placed_count; i++)
         {
@@ -138,7 +138,14 @@ internal sealed class MinimapView
             Vector direction = axis_x * forward.x + axis_z * forward.z;
             heading_degrees = MapProjection.heading(new Vector(direction.X / span.X, direction.Y / span.Y));
         }
-        draw_arrow(panel.center, heading_degrees, 16, Color.white);
+        bool duck = TimeManager.InstanceExists && !string.IsNullOrEmpty(player.PlayerCode) &&
+            MarkerDay.score(player.PlayerCode, TimeManager.Instance.ElapsedDays) % 100 == 0;
+        if (duck)
+        {
+            overlay.texture(new Rect(panel.center.x - 10, panel.center.y - 10, 20, 20),
+                icons[5], new Rect(0, 0, 1, 1), new Color(1f, 0.85f, 0.15f, 1), heading_degrees);
+        }
+        else draw_arrow(panel.center, heading_degrees, 16, Color.white);
         string time = TimeManager.InstanceExists ? $"{TimeManager.Instance.CurrentTime / 100:00}:{TimeManager.Instance.CurrentTime % 100:00}" : "";
         overlay.label(new Rect(panel.x + 6, panel.yMax + 3, panel.width - 12, 18), time, Color.white);
     }
@@ -216,6 +223,10 @@ internal sealed class MinimapView
                             (vertical >= 0.2f && vertical < 0.85f && Math.Abs(horizontal) < 0.85f - vertical),
                         2 => (Math.Abs(horizontal) < 0.75f && vertical > -0.55f && vertical < 0.4f) ||
                             (Math.Abs(horizontal) < 0.35f && vertical >= 0.4f && vertical < 0.65f),
+                        5 => (horizontal * horizontal / 0.35f + (vertical + 0.25f) * (vertical + 0.25f) / 0.18f < 1f) ||
+                            (horizontal * horizontal + (vertical - 0.35f) * (vertical - 0.35f) < 0.12f &&
+                            !((horizontal - 0.13f) * (horizontal - 0.13f) + (vertical - 0.4f) * (vertical - 0.4f) < 0.004f)) ||
+                            (vertical > 0.55f && vertical < 0.85f && Math.Abs(horizontal) < 0.12f),
                         4 => Math.Abs(horizontal) < 0.18f &&
                             ((vertical > -0.15f && vertical < 0.8f) || (vertical > -0.75f && vertical < -0.4f)),
                         _ => horizontal * horizontal + vertical * vertical < 0.45f

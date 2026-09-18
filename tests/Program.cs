@@ -6,6 +6,15 @@ internal static class Program
 {
     private static void Main()
     {
+        uint first_day = MarkerDay.score("test-player", 1);
+        if (first_day != MarkerDay.score("test-player", 1) || first_day == MarkerDay.score("test-player", 2))
+            throw new InvalidOperationException("Daily cosmetic selection must survive reload and vary by day.");
+        int rare_days = 0;
+        for (int day = 0; day < 10000; day++)
+            if (MarkerDay.score("test-player", day) % 100 == 0) rare_days++;
+        if (rare_days < 50 || rare_days > 150) throw new InvalidOperationException("Daily cosmetic probability drift.");
+        if (MarkerDay.score("test-player", -1) != uint.MaxValue) throw new InvalidOperationException("Invalid day rejected.");
+
         Vector2 center = new(0.5f, 0.5f);
         Vector2 span = new(0.2f, 0.2f);
         require(MapProjection.try_offset(center, center, span, 280, false, out Vector2 offset, out bool edge) && offset == Vector2.Zero && !edge, "Player stays at center");

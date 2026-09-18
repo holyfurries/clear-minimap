@@ -10,7 +10,7 @@ using Il2CppScheduleOne.UI.Phone.Map;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(ClearMinimap.Main), "Clear Minimap", "0.1.11", "holyfurries")]
+[assembly: MelonInfo(typeof(ClearMinimap.Main), "Clear Minimap", "0.1.13", "holyfurries")]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 namespace ClearMinimap;
