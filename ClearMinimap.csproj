@@ -4,6 +4,7 @@
     <AssemblyName>ClearMinimap</AssemblyName>
     <Version>0.1.13</Version>
     <Nullable>enable</Nullable>
+    <PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <ItemGroup>
