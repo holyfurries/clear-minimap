@@ -51,7 +51,9 @@ small positional lag and never changes gameplay transforms.
 ## Settings and lifecycle
 
 Size and visibility use MelonPreferences with a 0.75-second save delay.
-An IMGUI settings card appears with the minimap preview while Settings is open.
+Size and visibility are registered with the Mod Settings mod (`ModSettings.Settings`), a required
+dependency built from `../mod-settings` (override with `-p:ModSettingsDll=`); its Mods tab edits
+the preferences and saves them. The minimap preview still shows while Settings is open.
 The gameplay overlay otherwise hides during pause, phone use and death.
 
 Known competing minimap mods disable this overlay. API failures hide it and
@@ -76,7 +78,7 @@ In-game checks remain necessary:
 - Check starting cash pickups, tracked objectives, deals and teammates at the edge.
 - Test completing/untracking objectives, dealer assignment and property purchases.
 - Compare four-player positions and markers, including joining and leaving.
-- Test Settings, saved size, phone/pause/death visibility and scene reload.
+- Test the Mods settings tab (switch and size slider move the live preview), saved size, phone/pause/death visibility and scene reload.
 - Check 720p, 1080p, 1440p and ultrawide layouts against other HUD elements.
 
 Successful compilation and automated checks do not establish native rendering

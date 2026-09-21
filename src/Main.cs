@@ -10,7 +10,7 @@ using Il2CppScheduleOne.UI.Phone.Map;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(ClearMinimap.Main), "Clear Minimap", "0.1.13", "holyfurries")]
+[assembly: MelonInfo(typeof(ClearMinimap.Main), "Clear Minimap", "0.2.0", "holyfurries")]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 namespace ClearMinimap;
@@ -18,23 +18,21 @@ namespace ClearMinimap;
 public sealed class Main : MelonMod
 {
     private readonly MinimapView view = new();
-    private MelonPreferences_Category preferences = null!;
     private MelonPreferences_Entry<float> map_size = null!;
     private MelonPreferences_Entry<bool> enabled = null!;
     private bool running;
     private bool failed;
     private bool conflict;
-    private bool dirty;
-    private float save_seconds;
     private float refresh_seconds;
-    private GUIStyle? settings_style;
     private int objective_count_previous = -1;
 
     public override void OnInitializeMelon()
     {
-        preferences = MelonPreferences.CreateCategory("ClearMinimap");
+        MelonPreferences_Category preferences = MelonPreferences.CreateCategory("ClearMinimap");
         map_size = preferences.CreateEntry<float>("size", 280f, "Minimap size");
         enabled = preferences.CreateEntry<bool>("enabled", true, "Show minimap");
+        ModSettings.Settings.toggle("Clear Minimap", "Show minimap", enabled);
+        ModSettings.Settings.slider("Clear Minimap", "Minimap size", map_size, minimum: 200f, maximum: 360f, whole_numbers: true);
         HarmonyInstance.Patch(AccessTools.Method(typeof(POI), nameof(POI.OnEnable)),
             postfix: new HarmonyMethod(typeof(Main), nameof(register_point)));
         HarmonyInstance.Patch(AccessTools.Method(typeof(POI), nameof(POI.OnDisable)),
@@ -58,7 +56,7 @@ public sealed class Main : MelonMod
         failed = false;
         refresh_seconds = 0;
         objective_count_previous = -1;
-        LoggerInstance.Msg("Clear Minimap: Map enabled; screen-space overlay renderer; size controls are shown while Settings is open. No F3 menu.");
+        LoggerInstance.Msg("Clear Minimap: Map enabled; screen-space overlay renderer; size and visibility are on the Mods settings tab.");
     }
 
     public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
@@ -74,11 +72,6 @@ public sealed class Main : MelonMod
     {
         try
         {
-            if (dirty && Time.unscaledTime >= save_seconds)
-            {
-                dirty = false;
-                preferences.SaveToFile(false);
-            }
             if (!ready() || Time.unscaledTime < refresh_seconds) return;
             refresh_seconds = Time.unscaledTime + 0.5f;
             MapMarkers.refresh();
@@ -114,22 +107,6 @@ public sealed class Main : MelonMod
         catch (Exception error) { fail(error); }
     }
 
-    public override void OnGUI()
-    {
-        if (failed || conflict) return;
-        Matrix4x4 matrix = GUI.matrix;
-        Color color = GUI.color;
-        try
-        {
-            if (!settings_open()) return;
-            float scale = Math.Clamp(Screen.height / 1080f, 0.65f, 2f);
-            GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(scale, scale, 1));
-            draw_settings(new Rect(Screen.width / scale - 376, 16, 360, 360));
-        }
-        catch (Exception error) { fail(error); }
-        finally { GUI.matrix = matrix; GUI.color = color; }
-    }
-
     private static bool settings_open()
     {
         MenuScreen screen = MenuScreen.Current;
@@ -141,24 +118,6 @@ public sealed class Main : MelonMod
         return running && !failed && !conflict && LoadManager.InstanceExists && LoadManager.Instance.IsGameLoaded &&
             Player.Local != null && Player.Local.Health != null && MapApp.InstanceExists && MapPositionUtility.InstanceExists &&
             MapApp.Instance.BackgroundImage != null && MapApp.Instance.PoIContainer != null;
-    }
-
-    private void draw_settings(Rect panel)
-    {
-        settings_style ??= new GUIStyle(GUI.skin.label) { fontSize = 14, richText = false };
-        if (Event.current.type == EventType.Repaint)
-            Graphics.DrawTexture(new Rect(panel.x - 3, panel.yMax + 28, panel.width + 6, 94),
-                Texture2D.whiteTexture, new Rect(0, 0, 1, 1), 0, 0, 0, 0,
-                new Color(0.055f, 0.07f, 0.085f, 0.98f), GUI.blendMaterial, -1);
-        GUI.Label(new Rect(panel.x + 10, panel.yMax + 34, panel.width - 20, 24), $"Minimap size · {MapProjection.size(map_size.Value):0}", settings_style);
-        float selected = GUI.HorizontalSlider(new Rect(panel.x + 12, panel.yMax + 63, panel.width - 24, 18), MapProjection.size(map_size.Value), 200f, 360f);
-        selected = MathF.Round(selected / 5f) * 5f;
-        bool show = GUI.Toggle(new Rect(panel.x + 12, panel.yMax + 86, panel.width - 24, 24), enabled.Value, " Show minimap");
-        if (selected == map_size.Value && show == enabled.Value) return;
-        map_size.Value = selected;
-        enabled.Value = show;
-        dirty = true;
-        save_seconds = Time.unscaledTime + 0.75f;
     }
 
     private static void register_point(POI __instance) => MapMarkers.register_point(__instance);

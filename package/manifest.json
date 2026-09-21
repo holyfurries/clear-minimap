@@ -1,9 +1,10 @@
 {
   "name": "ClearMinimap",
-  "version_number": "0.1.13",
+  "version_number": "0.2.0",
   "website_url": "https://github.com/holyfurries/clear-minimap",
-  "description": "A clean square minimap with adjustable size, camera heading, teammate markers, owned properties, active deals and native map locations. No F3 menu. IL2CPP.",
+  "description": "A clean square minimap with adjustable size, camera heading, teammate markers, owned properties, active deals and native map locations. IL2CPP.",
   "dependencies": [
-    "LavaGang-MelonLoader-0.7.3"
+    "LavaGang-MelonLoader-0.7.3",
+    "holyfurries-ModSettings-0.1.0"
   ]
 }
