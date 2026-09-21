@@ -50,7 +50,7 @@ small positional lag and never changes gameplay transforms.
 
 ## Settings and lifecycle
 
-Size and visibility use MelonPreferences with a 0.75-second save delay.
+Size and visibility use MelonPreferences.
 Size and visibility are registered with the Mod Settings mod (`ModSettings.Settings`), a required
 dependency built from `../mod-settings` (override with `-p:ModSettingsDll=`); its Mods tab edits
 the preferences and saves them. The minimap preview still shows while Settings is open.
