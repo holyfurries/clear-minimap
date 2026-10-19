@@ -10,7 +10,7 @@ using Il2CppScheduleOne.UI.Phone.Map;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(ClearMinimap.Main), "Clear Minimap", "0.2.0", "holyfurries")]
+[assembly: MelonInfo(typeof(ClearMinimap.Main), "Clear Minimap", "0.2.1", "holyfurries")]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 namespace ClearMinimap;
@@ -24,7 +24,6 @@ public sealed class Main : MelonMod
     private bool failed;
     private bool conflict;
     private float refresh_seconds;
-    private int objective_count_previous = -1;
 
     public override void OnInitializeMelon()
     {
@@ -55,8 +54,6 @@ public sealed class Main : MelonMod
         running = true;
         failed = false;
         refresh_seconds = 0;
-        objective_count_previous = -1;
-        LoggerInstance.Msg("Clear Minimap: Map enabled; screen-space overlay renderer; size and visibility are on the Mods settings tab.");
     }
 
     public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
@@ -75,14 +72,6 @@ public sealed class Main : MelonMod
             if (!ready() || Time.unscaledTime < refresh_seconds) return;
             refresh_seconds = Time.unscaledTime + 0.5f;
             MapMarkers.refresh();
-            int objective_count = 0;
-            for (int i = 0; i < MapMarkers.count; i++)
-                if (MapMarkers.markers[i].kind == MarkerKind.Objective) objective_count++;
-            if (objective_count != objective_count_previous)
-            {
-                objective_count_previous = objective_count;
-                LoggerInstance.Msg($"Clear Minimap: Located tracked objectives={objective_count}.");
-            }
         }
         catch (Exception error) { fail(error); }
     }

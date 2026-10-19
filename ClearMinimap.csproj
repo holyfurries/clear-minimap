@@ -2,8 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>ClearMinimap</AssemblyName>
-    <Version>0.2.0</Version>
-    <ModSettingsDll Condition="'$(ModSettingsDll)' == ''">../mod-settings/bin/Release/net6.0/ModSettings.dll</ModSettingsDll>
+    <Version>0.2.1</Version>
+    <ModSettingsDll Condition="'$(ModSettingsDll)' == ''">$(MelonLoaderDir)/../Mods/ModSettings.dll</ModSettingsDll>
     <Nullable>enable</Nullable>
     <PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -14,9 +14,10 @@
     <Reference Include="$(MelonLoaderDir)/net6/0Harmony.dll" Private="false" />
     <Reference Include="$(MelonLoaderDir)/net6/Il2CppInterop.Runtime.dll" Private="false" />
     <Reference Include="$(MelonLoaderDir)/Il2CppAssemblies/*.dll" Private="false" />
-    <Reference Include="$(ModSettingsDll)" Private="false" />
+    <Reference Include="ModSettings" HintPath="$(ModSettingsDll)" Private="false" />
   </ItemGroup>
   <Target Name="CheckGameReferences" BeforeTargets="ResolveReferences">
     <Error Condition="!Exists('$(MelonLoaderDir)/Il2CppAssemblies/Assembly-CSharp.dll')" Text="Set MelonLoaderDir to a MelonLoader directory with generated Il2CppAssemblies." />
+    <Error Condition="!Exists('$(ModSettingsDll)')" Text="Install ModSettings 0.2.0 or set ModSettingsDll to its DLL path." />
   </Target>
 </Project>

@@ -1,29 +1,34 @@
 # Clear Minimap
 
-A square minimap with a clean frame and a heading arrow that follows your view.
+A square minimap with a north-up map and an arrow that follows your view. It
+shows teammates with names and distances, owned properties, active deals,
+tracked objectives, and locations from the game's map.
 
-- **Adjustable size:** 280 pixels by default. Change it from 200–360 on the **Mods** tab of the game's settings screen.
-- **Useful markers:** teammates with names and distances, owned properties, tracked objectives, active deals, and locations from the game's map.
-- **Off-screen pointers:** teammates, deals, and tracked objectives stay visible at the edge.
-- **In the settings menu.** Size and visibility live on the Mods tab, added by [Mod Settings](https://thunderstore.io/c/schedule-i/p/holyfurries/ModSettings/) (installed automatically), and are saved automatically.
+Teammates, deals, and objectives stay visible at the edge when out of range. The
+map covers 220 metres across and hides while the phone or pause menu is open,
+except for its settings preview.
 
-The map stays north-up and shows 220 metres across. It hides while the phone or pause menu
-is open, except for its preview in Settings.
+## Install
 
-Very rarely, your player marker has a duck day. It still points where you are looking,
-and returns to the usual daily selection when the in-game day changes.
+**IL2CPP only.** Requires **MelonLoader 0.7.3** and **ModSettings 0.2.0**.
 
-## Installation
+Disable **SimpleMinimap** or other minimap mods. Install through **r2modman** or
+**Thunderstore Mod Manager**, which installs ModSettings automatically. For
+manual installation, copy `ClearMinimap.dll` and `ModSettings.dll` from their
+release ZIPs into the game's `Mods/` folder.
 
-Disable **SimpleMinimap** or any other minimap mod, then install through your mod manager.
-For manual installation, put `ClearMinimap.dll` in your game's `Mods` folder.
+## Settings
 
-Requires **MelonLoader 0.7.3**. **IL2CPP only.**
+Open **Settings → Mods → Clear Minimap** to change visibility and size. The map
+is 280 reference pixels wide by default, adjustable from 200 to 360. Changes
+apply live and are saved in `UserData/MelonPreferences.cfg`.
+
+Occasionally your player marker has a duck day. It still follows your view.
 
 ## Development
 
-Build instructions: [BUILDING.md](https://github.com/holyfurries/clear-minimap/blob/main/BUILDING.md).
+See
+[BUILDING.md](https://github.com/holyfurries/clear-minimap/blob/main/BUILDING.md)
+for builds, tests, packaging, and in-game checks.
 
-## License
-
-[MIT](https://github.com/holyfurries/clear-minimap/blob/main/LICENSE).
+[MIT license](https://github.com/holyfurries/clear-minimap/blob/main/LICENSE).
