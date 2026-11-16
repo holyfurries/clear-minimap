@@ -46,7 +46,8 @@ internal sealed class MinimapView
 
     private void draw_content(Rect panel, bool map_available, float zoom, MarkerVisibility visibility)
     {
-        for (int i = 0; i < icons.Length; i++) icons[i] ??= create_icon(i);
+        for (int i = 0; i < icons.Length; i++)
+            if (icons[i] == null) icons[i] = create_icon(i);
         overlay.box(new Rect(panel.x - 3, panel.y - 3, panel.width + 6, panel.height + 26), background);
         overlay.box(new Rect(panel.x - 1, panel.y - 1, panel.width + 2, panel.height + 2), new Color(0.3f, 0.37f, 0.4f, 1));
         overlay.box(panel, new Color(0.09f, 0.12f, 0.14f, 1));
