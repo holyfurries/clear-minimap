@@ -142,7 +142,7 @@ internal sealed class MinimapView
             Vector direction = axis_x * forward.x + axis_z * forward.z;
             heading_degrees = MapProjection.heading(new Vector(direction.X / span.X, direction.Y / span.Y));
         }
-        string time = TimeManager.InstanceExists ? $"{TimeManager.Instance.CurrentTime / 100:00}:{TimeManager.Instance.CurrentTime % 100:00}" : "";
+        string time = TimeManager.InstanceExists ? MapProjection.clock(TimeManager.Instance.CurrentTime, (int)TimeManager.Instance.CurrentDay) : "";
         overlay.label(new Rect(panel.x + 6, panel.yMax + 3, panel.width - 12, 18), time, Color.white);
         bool duck = TimeManager.InstanceExists && !string.IsNullOrEmpty(player.PlayerCode) &&
             MarkerDay.score(player.PlayerCode, TimeManager.Instance.ElapsedDays) % 100 == 0;

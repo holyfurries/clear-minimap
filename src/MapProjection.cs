@@ -7,6 +7,14 @@ internal enum MapCorner { TopRight, TopLeft, BottomRight, BottomLeft }
 
 internal static class MapProjection
 {
+    private static readonly string[] day_names = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
+    public static string clock(int time, int day)
+    {
+        string text = $"{time / 100:00}:{time % 100:00}";
+        return day >= 0 && day < day_names.Length ? $"{day_names[day]} {text}" : text;
+    }
+
     public static float size(float value) => float.IsFinite(value) ? Math.Clamp(value, 200f, 360f) : 280f;
 
     public static float zoom(float value) => float.IsFinite(value) ? Math.Clamp(value, 0.5f, 4f) : 1f;

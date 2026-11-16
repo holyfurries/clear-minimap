@@ -33,6 +33,10 @@ internal static class Program
         if (rare_days < 50 || rare_days > 150) throw new InvalidOperationException("Daily cosmetic probability drift.");
         if (MarkerDay.score("test-player", -1) != uint.MaxValue) throw new InvalidOperationException("Invalid day rejected.");
 
+        require(MapProjection.clock(930, 0) == "Monday 09:30" && MapProjection.clock(2359, 6) == "Sunday 23:59",
+            "Clock shows the day of the week before the time");
+        require(MapProjection.clock(1200, 7) == "12:00" && MapProjection.clock(1200, -1) == "12:00",
+            "Unknown days show only the time");
         Vector2 center = new(0.5f, 0.5f);
         Vector2 span = new(0.2f, 0.2f);
         require(MapProjection.try_offset(center, center, span, 280, false, out Vector2 offset, out bool edge) && offset == Vector2.Zero && !edge, "Player stays at center");
@@ -147,7 +151,7 @@ internal static class Program
         motion.reset();
         for (int identity = 0; identity < 200; identity++)
             require(motion.sample(identity, new Vector2(identity, 0), identity, identity) == new Vector2(identity, 0), "Marker churn remains bounded and starts at current position");
-        Console.WriteLine("Marker visibility, map projection, zoom, placement, heading, edge markers, texture clipping, and size checks passed.");
+        Console.WriteLine("Marker visibility, clock, map projection, zoom, placement, heading, edge markers, texture clipping, and size checks passed.");
     }
 
     private static void require(bool condition, string message)
