@@ -39,6 +39,10 @@ vehicles use a blue outline. The vehicle you are riding uses the player marker.
 All marker categories are enabled by default. Hiding a category also hides its
 labels and edge pointers.
 
+Turn off **Show name and distance labels** to hide the boxes with names and
+distances next to teammates and deals. Their markers and edge pointers stay
+visible.
+
 **Show phone map NPCs** includes NPC icons visible on the native phone map and
 is enabled by default. NPCs use the native icon and color, disappear outside the
 minimap, and give way to deals, objectives, and other existing markers when

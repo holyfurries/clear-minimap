@@ -37,14 +37,14 @@ internal sealed class MinimapView
 
     public void hide() => overlay.hide();
 
-    public void draw(Rect panel, bool map_available, float scale, float zoom, MarkerVisibility visibility)
+    public void draw(Rect panel, bool map_available, float scale, float zoom, MarkerVisibility visibility, bool show_labels)
     {
         overlay.begin(scale);
-        try { draw_content(panel, map_available, zoom, visibility); }
+        try { draw_content(panel, map_available, zoom, visibility, show_labels); }
         finally { overlay.end(); }
     }
 
-    private void draw_content(Rect panel, bool map_available, float zoom, MarkerVisibility visibility)
+    private void draw_content(Rect panel, bool map_available, float zoom, MarkerVisibility visibility, bool show_labels)
     {
         for (int i = 0; i < icons.Length; i++) icons[i] ??= create_icon(i);
         overlay.box(new Rect(panel.x - 3, panel.y - 3, panel.width + 6, panel.height + 26), background);
@@ -113,7 +113,7 @@ internal sealed class MinimapView
             visible_markers[placed_count] = marker;
             marker_colors[placed_count] = color;
             placed_count++;
-            if (marker.kind == MarkerKind.Objective || !important || label_count >= labels.Length) continue;
+            if (!show_labels || marker.kind == MarkerKind.Objective || !important || label_count >= labels.Length) continue;
             int distance = (int)Math.Min(9999f, Vector3.Distance(player.transform.position, position));
             string text = $"{marker.label} · {distance}m";
             Rect label = new(Math.Clamp(point.x + 11, panel.x + 2, panel.xMax - 132),

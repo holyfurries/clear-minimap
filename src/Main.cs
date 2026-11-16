@@ -28,6 +28,7 @@ public sealed class Main : MelonMod
     private MelonPreferences_Entry<bool> show_deals = null!;
     private MelonPreferences_Entry<bool> show_objectives = null!;
     private MelonPreferences_Entry<bool> show_places = null!;
+    private MelonPreferences_Entry<bool> show_labels = null!;
     private MelonPreferences_Entry<float> zoom = null!;
     private MelonPreferences_Entry<MapCorner> corner = null!;
     private MelonPreferences_Entry<int> horizontal_offset_percent = null!;
@@ -52,6 +53,7 @@ public sealed class Main : MelonMod
         show_deals = preferences.CreateEntry("show_deals", true, "Show deals");
         show_objectives = preferences.CreateEntry("show_objectives", true, "Show objectives");
         show_places = preferences.CreateEntry("show_places", true, "Show places");
+        show_labels = preferences.CreateEntry("show_labels", true, "Show name and distance labels");
         show_npcs.OnEntryValueChanged.Subscribe((_, value) => refresh_seconds = 0);
         zoom = preferences.CreateEntry<float>("zoom", 1f, "Zoom");
         zoom_in_key = preferences.CreateEntry("zoom_in_key", KeyCode.PageUp, "Zoom in shortcut");
@@ -69,6 +71,7 @@ public sealed class Main : MelonMod
         ModSettings.Settings.toggle("Clear Minimap", "Show phone map NPCs", show_npcs);
         ModSettings.Settings.toggle("Clear Minimap", "Show recruited dealers", show_dealers);
         ModSettings.Settings.toggle("Clear Minimap", "Show owned vehicles", show_vehicles);
+        ModSettings.Settings.toggle("Clear Minimap", "Show name and distance labels", show_labels);
         ModSettings.Settings.slider("Clear Minimap", "Zoom", zoom, minimum: 0.5f, maximum: 4f);
         ModSettings.Settings.keybind("Clear Minimap", "Zoom in shortcut", zoom_in_key);
         ModSettings.Settings.keybind("Clear Minimap", "Zoom out shortcut", zoom_out_key);
@@ -155,7 +158,7 @@ public sealed class Main : MelonMod
             float size = MapProjection.size(map_size.Value);
             System.Numerics.Vector2 position = MapProjection.panel_position(new(Screen.width / scale, Screen.height / scale), size,
                 corner.Value, new(horizontal_offset_percent.Value, vertical_offset_percent.Value));
-            view.draw(new Rect(position.X, position.Y, size, size), available, scale, MapProjection.zoom(zoom.Value), marker_visibility());
+            view.draw(new Rect(position.X, position.Y, size, size), available, scale, MapProjection.zoom(zoom.Value), marker_visibility(), show_labels.Value);
         }
         catch (Exception error) { fail(error); }
     }
